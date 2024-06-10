@@ -14,15 +14,6 @@ public class Posts_Chapter07 {
 		Connection con = null;
 		PreparedStatement statement = null;
 		
-		// 投稿リスト
-		String[][] postList = {
-			{"1003", "2023-02-08", "昨日の夜は徹夜でした・・", "13"},
-			{"1002", "2023-02-08", "お疲れ様です！", "12"},
-			{"1003", "2023-02-09", "今日も頑張ります！", "18"},
-			{"1001", "2023-02-09", "無理は禁物ですよ！", "17"},
-			{"1002", "2023-02-10", "明日から連休ですね！", "20"}
-		};
-		
 		try {
 			// データベースに接続
 			con =DriverManager.getConnection(
@@ -33,29 +24,20 @@ public class Posts_Chapter07 {
 			
 			System.out.println("データベースに接続成功");
 			
-			// 投稿データを追加
-			// SQL1クエリを準備
-			String sql1 = "INSERT INTO posts (user_id, posted_at, post_content, likes) VALUES(?, ?, ?, ?);";
+			// 投稿データを追加するsql1を準備
+			String sql1 = "INSERT INTO posts (user_id, posted_at, post_content, likes) VALUES (1003, '2023-02-08', '昨日の夜は徹夜でした・・', 13), (1002, '2023-02-08', 'お疲れ様です！', 12), (1003, '2023-02-09', '今日も頑張ります！', 18), (1001, '2023-02-09', '無理は禁物ですよ！', 17), (1002, '2023-02-10', '明日から連休ですね！', 20);";
 			statement = con.prepareCall(sql1);
 			
-			// リストの1行目から順番に読み込む
 			int rowCnt = 0;
-			for(int i = 0; i < postList.length; i++) {
-				// SQL1のSQLクエリの「?」部分をリストのデータに置き換え	
-				statement.setInt(1, Integer.parseInt(postList[i][0]));
-				statement.setString(2, postList[i][1]);
-				statement.setString(3, postList[i][2]);
-				statement.setInt(4,Integer.parseInt(postList[i][3]));
-				
-				// SQL1クエリを実行 (DBMSに送信)
-				System.out.println("レコードの追加" + statement.toString());
-				rowCnt = statement.executeUpdate();
-				System.out.println(rowCnt + "件のレコードが追加されました");
-			}
-			
+		
+			// SQL1クエリを実行 (DBMSに送信)
+			System.out.println("レコードの追加" + statement.toString());
+			rowCnt = statement.executeUpdate();
+			System.out.println(rowCnt + "件のレコードが追加されました");
+		
 			// 投稿データを検索
-			// SQL2クエリを準備
-			String sql2 ="SELECT posted_at, post_content, likes FROM posts";
+			// 投稿データを検索するSQL2クエリを準備
+			String sql2 ="SELECT posted_at, post_content, likes FROM posts WHERE user_id = 1002";
 			
 			// SQL2のクエリを実行(DBMSの送信)
 			ResultSet result = statement.executeQuery(sql2);
